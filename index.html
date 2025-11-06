@@ -11,7 +11,7 @@
     <!-- 2. Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sacramento&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sacramento&family=Lora:ital,wght@0,400;0,500;1,400&display.swap" rel="stylesheet">
 
     <!-- 3. JavaScript Libraries -->
     <!-- canvas-confetti for surprise -->
@@ -374,7 +374,8 @@
 
             <!-- NEW: Local Audio Player -->
             <!-- This is hidden by default because it has no 'controls' attribute -->
-            <audio id="letter-music" src="song.mp3" loop>
+            <!-- *** NEW: ADDED muted ATTRIBUTE *** -->
+            <audio id="letter-music" src="song.mp3" loop muted>
                 Your browser does not support the audio element.
             </audio>
             <!-- End of Audio Player -->
@@ -699,14 +700,33 @@
             // NEW: Get the audio element
             const letterMusic = document.getElementById('letter-music');
 
-            // --- NEW: TRY TO PLAY ON LOAD ---
+            
+            // --- NEW: AUTOPLAY ON LOAD ---
             if (letterMusic) {
-                // This attempts to play on load. 
-                // NOTE: Most browsers will block this until the user clicks.
-                // We add .catch() to prevent a console error if it's blocked.
-                letterMusic.play().catch(e => console.log("Autoplay was blocked. Waiting for user click."));
+                // 1. Start playing the muted audio immediately on load.
+                // This is allowed by all browsers.
+                letterMusic.play().catch(e => {
+                    // This catch block is important for browsers that
+                    // might even block muted autoplay, though it's rare.
+                    console.error("Muted autoplay failed:", e)
+                });
+
+                let hasUnmuted = false;
+
+                // 2. Create a function to unmute on the first interaction.
+                const unmuteOnFirstClick = () => {
+                    if (!hasUnmuted) {
+                        letterMusic.muted = false;
+                        hasUnmuted = true;
+                        document.removeEventListener('click', unmuteOnFirstClick);
+                    }
+                };
+
+                // 3. Listen for the first click *anywhere* to unmute.
+                document.addEventListener('click', unmuteOnFirstClick);
             }
-            // --- END NEW ---
+            // --- END NEW AUTOPLAY ---
+
 
             // Show helper text after a delay
             setTimeout(() => {
@@ -716,12 +736,10 @@
             // Removed async and music logic
             envelope.addEventListener('click', () => { 
                 
-                // NEW: Play the local audio file
-                if (letterMusic) {
-                    // We also play it here. If autoplay failed, this click 
-                    // will successfully start the music.
-                    letterMusic.play().catch(e => console.error("Audio playback failed:", e));
-                }
+                // --- UPDATE: ---
+                // The music is already playing. This click will have
+                // already unmuted it via the `unmuteOnFirstClick` listener.
+                // So no audio logic is needed here anymore.
                 
                 envelope.classList.add('open');
                 envelopeHelper.style.opacity = '0';
