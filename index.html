@@ -35,7 +35,7 @@
                 --text-color: theme(colors.cream);
                 --accent-color: theme(colors.rose-taupe);
                 --highlight-color: theme(colors.blush-pink);
-                --paper-bg: theme(colors.deep-plum / 0.5); /* A slightly lighter plum */
+                --paper-bg: #2b1f24; /* Dark paper, slightly lighter than bg */
                 --sticky-bg: theme(colors.rose-taupe / 0.3);
             }
             body {
@@ -186,10 +186,11 @@
         .sticky-note:nth-child(odd) { transform: rotate(-2deg); }
         .sticky-note:nth-child(even) { transform: rotate(2deg); }
 
-        /* Sealed Envelope */
+        /* --- ENVELOPE REDESIGN --- */
         #envelope {
             @apply relative w-80 h-60 rounded-lg shadow-2xl cursor-pointer transition-all duration-500 ease-in-out;
-            background-color: var(--highlight-color);
+            background-color: var(--paper-bg); /* Changed to paper color */
+            border: 1px solid var(--accent-color); /* Added subtle border */
             transform-style: preserve-3d;
         }
         #envelope:hover {
@@ -204,7 +205,7 @@
         #envelope::before {
             @apply w-0 h-0 border-transparent z-20;
             border-width: 10rem 10rem 0 10rem; /* 160px 160px 0 160px */
-            border-top-color: var(--accent-color);
+            border-top-color: var(--accent-color); /* Flap is rose-taupe */
             top: 0;
             left: 0;
             transform-origin: top;
@@ -213,7 +214,7 @@
         /* Back */
         #envelope::after {
             @apply w-full h-full rounded-lg;
-            background-color: var(--highlight-color);
+            background-color: var(--paper-bg); /* Changed to paper color */
             top: 0;
             left: 0;
         }
@@ -222,14 +223,10 @@
             z-index: 0;
             transition-delay: 0s;
         }
-        .envelope-text {
-            @apply absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-heading text-xl;
-            color: var(--text-color);
-            transition: opacity 0.3s ease-in-out;
-        }
-        #envelope.open .envelope-text {
-            opacity: 0;
-        }
+        /* REMOVED .envelope-text */
+        
+        /* --- END ENVELOPE REDESIGN --- */
+
 
         /* Timeline */
         .timeline-item {
@@ -356,12 +353,34 @@
     <div class="max-w-4xl mx-auto px-6 py-24 space-y-32">
 
         <!-- 2. NEW: Sealed Envelope Section -->
-        <section id="envelope-section" class="fade-in-section flex flex-col items-center justify-center min-h-[400px]">
+        <!-- *** REMOVED min-h-[400px] *** -->
+        <section id="envelope-section" class="fade-in-section flex flex-col items-center justify-center">
             <h2 class="text-4xl font-heading text-center mb-12">I wrote you a letter...</h2>
-            <div id="envelope">
-                <div class="envelope-text">Click to open</div>
+            
+            <!-- *** NEW: SVG ARROW *** -->
+            <div class="relative w-80 h-32 -mb-8 opacity-0" style="animation: fade-in 1s ease-out 1s forwards;">
+                <svg viewBox="0 0 200 100" class="absolute inset-0 overflow-visible">
+                    <!-- The spiral path -->
+                    <path id="arrow-path" d="M 20 80 C 20 40, 80 40, 80 80 S 140 120, 140 80 S 180 40, 180 80" fill="none" stroke="none" />
+                    
+                    <!-- The text following the path -->
+                    <text class="font-accent" style="font-size: 18px; fill: var(--highlight-color);">
+                        <textPath href="#arrow-path" startOffset="0%">
+                            Click to open...
+                        </textPath>
+                    </text>
+                    
+                    <!-- The arrowhead at the end -->
+                    <path d="M 175 80 L 180 75 L 185 80 L 180 85 Z" fill="var(--highlight-color)" />
+                </svg>
             </div>
-            <p id="envelope-helper" class="mt-8 font-accent text-2xl opacity-0 transition-opacity duration-500 delay-1000">Go on, open it!</p>
+            <!-- *** END SVG ARROW *** -->
+
+            <div id="envelope">
+                <!-- Removed envelope-text -->
+            </div>
+            
+            <!-- Removed envelope-helper -->
         </section>
 
 
@@ -611,8 +630,9 @@
                     <input id="password-input" type="text" placeholder="Type it here..." class="p-3 rounded-lg border-2 bg-transparent w-64" style="border-color: var(--highlight-color); color: var(--text-color);">
                     <button id="password-button" class="p-3 rounded-lg font-heading text-lg" style="background-color: var(--highlight-color); color: var(--text-color);">Reveal</button>
                 </div>
-                <!-- DEMO HINT -->
-                <p class="text-xs opacity-50 mt-4">(For demo: The password is "bird")</p>
+                
+                <!-- *** DEMO HINT REMOVED *** -->
+                
                 <p id="password-error" class="text-red-500 mt-4 hidden">Not quite! Try again.</p>
             </div>
             
@@ -692,7 +712,7 @@
             // --- 4. NEW: Envelope Opener ---
             const envelope = document.getElementById('envelope');
             const envelopeSection = document.getElementById('envelope-section');
-            const envelopeHelper = document.getElementById('envelope-helper');
+            // const envelopeHelper = document.getElementById('envelope-helper'); // REMOVED
             const letterSection = document.getElementById('letter');
             
             // NEW: Get the audio element
@@ -719,10 +739,10 @@
             // --- END NEW AUTOPLAY FIX ---
 
 
-            // Show helper text after a delay
-            setTimeout(() => {
-                envelopeHelper.style.opacity = '1';
-            }, 1500);
+            // Show helper text after a delay -- REMOVED
+            // setTimeout(() => {
+            //     envelopeHelper.style.opacity = '1';
+            // }, 1500);
 
             // Envelope click listener
             envelope.addEventListener('click', () => { 
@@ -731,11 +751,14 @@
                 startMusic();
                 
                 envelope.classList.add('open');
-                envelopeHelper.style.opacity = '0';
+                // envelopeHelper.style.opacity = '0'; // REMOVED
                 
                 // Wait for envelope animation to finish
                 setTimeout(() => {
-                    envelopeSection.classList.add('hidden'); // Hide envelope section
+                    // *** THIS IS THE FIX FOR LETTER POSITION ***
+                    envelopeSection.style.display = 'none'; // Replaces .classList.add('hidden')
+                    // *** END FIX ***
+                    
                     letterSection.classList.remove('hidden'); // Show letter
                     letterSection.classList.add('is-visible'); // Force trigger fade-in
                 }, 700); // 700ms matches animation
