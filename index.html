@@ -374,8 +374,8 @@
 
             <!-- NEW: Local Audio Player -->
             <!-- This is hidden by default because it has no 'controls' attribute -->
-            <!-- *** NEW: ADDED muted ATTRIBUTE *** -->
-            <audio id="letter-music" src="song.mp3" loop muted>
+            <!-- *** REMOVED muted ATTRIBUTE *** -->
+            <audio id="letter-music" src="song.mp3" loop>
                 Your browser does not support the audio element.
             </audio>
             <!-- End of Audio Player -->
@@ -701,31 +701,29 @@
             const letterMusic = document.getElementById('letter-music');
 
             
-            // --- NEW: AUTOPLAY ON LOAD ---
-            if (letterMusic) {
-                // 1. Start playing the muted audio immediately on load.
-                // This is allowed by all browsers.
-                letterMusic.play().catch(e => {
-                    // This catch block is important for browsers that
-                    // might even block muted autoplay, though it's rare.
-                    console.error("Muted autoplay failed:", e)
-                });
+            // --- NEW: AUTOPLAY FIX ---
+            let hasStartedMusic = false;
 
-                let hasUnmuted = false;
-
-                // 2. Create a function to unmute on the first interaction.
-                const unmuteOnFirstClick = () => {
-                    if (!hasUnmuted) {
-                        letterMusic.muted = false;
-                        hasUnmuted = true;
-                        document.removeEventListener('click', unmuteOnFirstClick);
-                    }
-                };
-
-                // 3. Listen for the first click *anywhere* to unmute.
-                document.addEventListener('click', unmuteOnFirstClick);
+            function startMusic() {
+                if (letterMusic && !hasStartedMusic) {
+                    // Try to play the music
+                    letterMusic.play().then(() => {
+                        // It worked! Mark as started and remove the listener.
+                        hasStartedMusic = true;
+                        document.removeEventListener('click', startMusic);
+                    }).catch(e => {
+                        // It failed (e.g., no 'song.mp3' file)
+                        console.error("Audio playback failed:", e);
+                        // We still remove the listener so it doesn't try again
+                        hasStartedMusic = true;
+                        document.removeEventListener('click', startMusic);
+                    });
+                }
             }
-            // --- END NEW AUTOPLAY ---
+
+            // 1. Listen for the first click *anywhere* to start music
+            document.addEventListener('click', startMusic);
+            // --- END NEW AUTOPLAY FIX ---
 
 
             // Show helper text after a delay
@@ -733,13 +731,13 @@
                 envelopeHelper.style.opacity = '1';
             }, 1500);
 
-            // Removed async and music logic
+            // Envelope click listener
             envelope.addEventListener('click', () => { 
                 
                 // --- UPDATE: ---
-                // The music is already playing. This click will have
-                // already unmuted it via the `unmuteOnFirstClick` listener.
-                // So no audio logic is needed here anymore.
+                // Also trigger the music start here, just in case.
+                // The 'hasStartedMusic' flag will prevent it from running twice.
+                startMusic();
                 
                 envelope.classList.add('open');
                 envelopeHelper.style.opacity = '0';
@@ -810,7 +808,7 @@
             
             // --- 7. NEW: Cursor Heart Trail ---
             document.addEventListener('mousemove', (e) => {
-                const heart = document.createElement('div');
+                const heart = document.createElement('.div');
                 heart.classList.add('trail-heart');
                 document.body.appendChild(heart);
 
