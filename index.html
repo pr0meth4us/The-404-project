@@ -11,7 +11,7 @@
     <!-- 2. Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sacramento&family=Lora:ital,wght@0,400;0,500;1,400&display.swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sacramento&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
     <!-- 3. JavaScript Libraries -->
     <!-- canvas-confetti for surprise -->
@@ -374,7 +374,6 @@
 
             <!-- NEW: Local Audio Player -->
             <!-- This is hidden by default because it has no 'controls' attribute -->
-            <!-- *** REMOVED muted ATTRIBUTE *** -->
             <audio id="letter-music" src="song.mp3" loop>
                 Your browser does not support the audio element.
             </audio>
@@ -700,44 +699,29 @@
             // NEW: Get the audio element
             const letterMusic = document.getElementById('letter-music');
 
-            
-            // --- NEW: AUTOPLAY FIX ---
-            let hasStartedMusic = false;
-
-            function startMusic() {
-                if (letterMusic && !hasStartedMusic) {
-                    // Try to play the music
-                    letterMusic.play().then(() => {
-                        // It worked! Mark as started and remove the listener.
-                        hasStartedMusic = true;
-                        document.removeEventListener('click', startMusic);
-                    }).catch(e => {
-                        // It failed (e.g., no 'song.mp3' file)
-                        console.error("Audio playback failed:", e);
-                        // We still remove the listener so it doesn't try again
-                        hasStartedMusic = true;
-                        document.removeEventListener('click', startMusic);
-                    });
-                }
+            // --- NEW: TRY TO PLAY ON LOAD ---
+            if (letterMusic) {
+                // This attempts to play on load. 
+                // NOTE: Most browsers will block this until the user clicks.
+                // We add .catch() to prevent a console error if it's blocked.
+                letterMusic.play().catch(e => console.log("Autoplay was blocked. Waiting for user click."));
             }
-
-            // 1. Listen for the first click *anywhere* to start music
-            document.addEventListener('click', startMusic);
-            // --- END NEW AUTOPLAY FIX ---
-
+            // --- END NEW ---
 
             // Show helper text after a delay
             setTimeout(() => {
                 envelopeHelper.style.opacity = '1';
             }, 1500);
 
-            // Envelope click listener
+            // Removed async and music logic
             envelope.addEventListener('click', () => { 
                 
-                // --- UPDATE: ---
-                // Also trigger the music start here, just in case.
-                // The 'hasStartedMusic' flag will prevent it from running twice.
-                startMusic();
+                // NEW: Play the local audio file
+                if (letterMusic) {
+                    // We also play it here. If autoplay failed, this click 
+                    // will successfully start the music.
+                    letterMusic.play().catch(e => console.error("Audio playback failed:", e));
+                }
                 
                 envelope.classList.add('open');
                 envelopeHelper.style.opacity = '0';
@@ -808,7 +792,7 @@
             
             // --- 7. NEW: Cursor Heart Trail ---
             document.addEventListener('mousemove', (e) => {
-                const heart = document.createElement('.div');
+                const heart = document.createElement('div');
                 heart.classList.add('trail-heart');
                 document.body.appendChild(heart);
 
