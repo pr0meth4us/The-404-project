@@ -14,8 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sacramento&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
     <!-- 3. JavaScript Libraries -->
-    <!-- Tone.js for music -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <!-- canvas-confetti for surprise -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -143,7 +141,7 @@
             z-index: 10;
         }
         .polaroid img {
-            @apply border border-gray-200;
+            @apply border border-gray-200 object-cover h-60 w-full; /* Added object-cover and fixed height */
         }
 
         /* "Little Things" Flip Cards */
@@ -342,8 +340,11 @@
     <section id="hero" class="h-screen flex items-center justify-center text-center relative overflow-hidden">
         <!-- particles-container was MOVED from here -->
         <div class="z-10 animate-fade-in opacity-0" style="animation: fade-in 1.5s ease-out 0.5s forwards;">
-            <h1 class="text-6xl md:text-8xl lg:text-9xl font-heading">Hi, love.</h1>
-            <p class="text-2xl md:text-3xl font-accent mt-4">I made this for you.</p>
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-heading">Hi, Allie.</h1>
+            <p class="text-2xl md:text-3xl font-accent mt-4">I wrote this for you.</p>
+            
+            <!-- NEW: Spotify Link Button -- REMOVED -->
+            
         </div>
         <style>
             @keyframes fade-in {
@@ -368,110 +369,151 @@
 
         <!-- 2. Love Letter Body (Now Hidden) -->
         <section id="letter" class="fade-in-section p-8 md:p-12 rounded-lg shadow-xl hidden" style="background-color: var(--paper-bg);">
-            <h2 class="font-accent text-5xl mb-8" style="color: var(--highlight-color);">My Dearest,</h2>
+            
+            <!-- NEW: Embedded Spotify Player -- REMOVED -->
+
+            <!-- NEW: Local Audio Player -->
+            <!-- This is hidden by default because it has no 'controls' attribute -->
+            <audio id="letter-music" src="song.mp3" loop>
+                Your browser does not support the audio element.
+            </audio>
+            <!-- End of Audio Player -->
+
+            <h2 class="font-accent text-5xl mb-8" style="color: var(--highlight-color);">My Dearest Allie,</h2>
             <div class="space-y-6 text-lg md:text-xl font-body leading-relaxed">
                 <p class="fade-in-section">
-                    I'm not sure where to even begin. Trying to put what I feel for you into words feels like trying to capture the entire sky in a single jar. It's endless, beautiful, and more than I ever knew I could hold.
+                    I couldn't sleep last night because I know that it's over between us. I'm not bitter anymore, because I know that what we had was real.
                 </p>
                 <p class="fade-in-section">
-                    What I love about you? I love the way your eyes crinkle when you laugh. I love the kindness you show to strangers, even when you think no one is watching. I love the way you listen, *really* listen, and make me feel like I'm the only person in the world. I love your ambition, your silliness, and the way you can make even a boring Tuesday feel like an adventure.
+                    What I love about you? I love that you're infuriating. I love the way you always challenge me. I love that you're stubborn and passionate. I love your laugh, especially when you throw your head back.
                 </p>
                 <p class="fade-in-section">
-                    I still think about that one evening... you know the one. The air was cold, but I've never felt warmer. We talked for hours, and it felt like minutes. That was the night I knew. I knew you were my person.
+                    I still think about that first night at the carnival. You were hanging from the ferris wheel, and I knew right then I was in trouble. That whole summer... it wasn't just a summer. It was a lifetime.
                 </p>
                 <p class="fade-in-section">
-                    My hope for us is simple: more. More laughter, more adventures, more quiet mornings, and more overcoming challenges together. My promise is that I will always be your biggest fan, your safest harbor, and your partner in everything.
+                    My hope for us is that we'llfind our way back, no matter what it takes. My promise is that I never stopped. I wrote you every day for a year. It wasn't over for me. It still isn't over.
                 </p>
             </div>
         </section>
 
-        <!-- iMessage-style chat bubbles -->
+        <!-- iMessage-style chat bubbles -- UPDATED FOR BETTER CALL SAUL -->
         <section id="imessage" class="fade-in-section">
-            <h2 class="text-4xl font-heading text-center mb-12">Remember this?</h2>
+            <h2 class="text-4xl font-heading text-center mb-12">This is us, isn't it?</h2>
             <div class="max-w-md mx-auto space-y-4">
                 <div class="chat-bubble-left fade-in-section">
-                    Hey, are you still up for grabbing food?
+                    No. No. Just tell me what I need to do to change, okay?
                 </div>
-                <div class="chat-bubble-right fade-in-section" style="transition-delay: 200ms;">
-                    Absolutely! I'm starving.
+                <div class="chat-bubble-left fade-in-section" style="transition-delay: 200ms;">
+                    Just tell me what it is and i’ll do it.
                 </div>
                 <div class="chat-bubble-right fade-in-section" style="transition-delay: 400ms;">
-                    ...but I could also just order pizza and we could watch that weird documentary?
+                    Jimmy
                 </div>
                 <div class="chat-bubble-left fade-in-section" style="transition-delay: 600ms;">
-                    That is 100% the best idea you've had all day.
+                    No, Kim.
                 </div>
                 <div class="chat-bubble-left fade-in-section" style="transition-delay: 800ms;">
-                    Ordering now. ❤️
+                    You make me happy.
+                </div>
+                <div class="chat-bubble-left fade-in-section" style="transition-delay: 1000ms;">
+                    We make each other happy.
+                </div>
+                <div class="chat-bubble-left fade-in-section" style="transition-delay: 1200ms;">
+                    How can that be bad?
+                </div>
+                <div class="chat-bubble-left fade-in-section" style="transition-delay: 1400ms;">
+                    Hey… I love you.
+                </div>
+                <div class="chat-bubble-right fade-in-section" style="transition-delay: 1600ms;">
+                    I love you, too.
+                </div>
+                <div class="chat-bubble-right fade-in-section" style="transition-delay: 1800ms;">
+                    But so what?
                 </div>
             </div>
         </section>
+        <!-- END UPDATED CHAT BUBBLES -->
 
-        <!-- NEW: Timeline Section -->
+        <!-- NEW: Timeline Section - UPDATED FOR 'NORMAL PEOPLE' -->
         <section id="timeline" class="fade-in-section">
             <h2 class="text-4xl font-heading text-center mb-12">Our Story So Far...</h2>
             <div class="relative">
                 <!-- Timeline Item 1 -->
                 <div class="timeline-item fade-in-section">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-date">August 2021</div>
-                    <div class="timeline-title">The Day We Met</div>
-                    <p class="font-body">I still remember seeing you across the room. It sounds like a cliché, but it felt like everything else faded away.</p>
+                    <div class="timeline-date">School Days</div>
+                    <div class="timeline-title">A Secret Language</div>
+                    <p class="font-body">Remember in Sligo? No one knew. It was just us, talking about books in that empty house. It felt like we had a world no one else could see.</p>
                 </div>
                 <!-- Timeline Item 2 -->
                 <div class="timeline-item fade-in-section" style="transition-delay: 200ms;">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-date">October 2021</div>
-                    <div class="timeline-title">Our First "Real" Date</div>
-                    <p class="font-body">We were both so nervous. We talked for five hours straight and it felt like five minutes. (And yes, I spilled pasta on my shirt.)</p>
+                    <div class="timeline-date">Trinity College</div>
+                    <div class="timeline-title">Finding Each Other Again</div>
+                    <p class="font-body">We were different people in Dublin. I saw you across the room, and everything just... clicked back into place. We always found our way back.</p>
                 </div>
                 <!-- Timeline Item 3 -->
                 <div class="timeline-item fade-in-section" style="transition-delay: 400ms;">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-date">June 2022</div>
-                    <div class="timeline-title">The Beach Trip</div>
-                    <p class="font-body">That weekend away, watching the sunset and just being quiet together. That's when I knew this was forever.</p>
+                    <div class="timeline-date">The Email Year</div>
+                    <div class="timeline-title">Across the Distance</div>
+                    <p class="font-body">Even from Sweden, you were the only person I could really talk to. Those emails... they saved me. You brought me home when I was lost.</p>
                 </div>
                 <!-- Timeline Item 4 -->
                 <div class="timeline-item fade-in-section" style="transition-delay: 600ms;">
                     <div class="timeline-dot"></div>
                     <div class="timeline-date">Today</div>
-                    <div class="timeline-title">...and It Only Gets Better</div>
-                    <p class="font-body">Every single day with you is my new favorite memory.</p>
+                    <div class="timeline-title">You Changed My Life</div>
+                    <p class="font-body">You taught me it's okay to be loved. Whatever happens next, we've done so much good for each other. You'll always be my person.</p>
                 </div>
             </div>
         </section>
+        <!-- END OF UPDATED TIMELINE -->
 
 
-        <!-- 3. Photo Strip / Gallery -->
+        <!-- 3. Photo Strip / Gallery -- UPDATED FOR NARCOS (PABLO & TATA) -->
         <section id="gallery" class="fade-in-section">
             <h2 class="text-4xl font-heading text-center mb-12">A few of my favorite moments...</h2>
             <!-- Horizontal scrolling container -->
             <div class="flex overflow-x-auto space-x-8 pb-8 snap-x snap-mandatory">
-                <!-- Polaroid 1 -->
+                
+                <!-- Polaroid 1 - NARCOS THEME -->
                 <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
-                    <img src="https://placehold.co/400x400/FFDDE4/543A43?text=Our+First+Trip" alt="Placeholder image of a trip" class="w-full h-auto">
-                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">The Beach, 2023</p>
+                    <img src="https://imgix.bustle.com/rehost/2016/10/17/208c6283-8e2c-4bce-9b16-0d82eb9778fc.png?w=1200&h=900&fit=crop&crop=faces&fm=jpg" 
+                         alt="Pablo and Tata dancing at Hacienda Nápoles" 
+                         class="w-full"
+                         onerror="this.src='https://placehold.co/400x400/543A43/FFF8F1?text=Hacienda+N%C3%A1poles'">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">Dancing at the Hacienda</p>
                 </div>
-                <!-- Polaroid 2 -->
+                <!-- Polaroid 2 - NARCOS THEME -->
                 <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
-                    <img src="https://placehold.co/400x400/D4C3B5/543A43?text=That+Silly+Hat" alt="Placeholder image of a silly hat" class="w-full h-auto">
-                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">The Farmer's Market</p>
+                    <img src="https://images.bauerhosting.com/legacy/media/6287/b9ab/ea86/665d/4185/80ed/Tata%20Escobar.jpg?ar=16%3A9&fit=crop&crop=top&auto=format&w=1440&q=80" 
+                         alt="Pablo, Tata, and their children in a quiet moment" 
+                         class="w-full"
+                         onerror="this.src='https://placehold.co/400x400/543A43/FFF8F1?text=Family+Portrait'">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">A Rare Quiet Moment</p>
                 </div>
-                <!-- Polaroid 3 -->
+                <!-- Polaroid 3 - NARCOS THEME -->
                 <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
-                    <img src="https://placehold.co/400x400/FFF8F1/543A43?text=New+Year's" alt="Placeholder image of New Year's" class="w-full h-auto">
-                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">Midnight</p>
+                    <img src="https://www.thevintagenews.com/wp-content/uploads/sites/65/2023/11/pablo-escobar-fb-image-26559.png" 
+                         alt="Tata standing by Pablo during a public event" 
+                         class="w-full"
+                         onerror="this.src='https://placehold.co/400x400/543A43/FFF8F1?text=Always+Together'">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">"Ride or Die"</p>
                 </div>
-                <!-- Polaroid 4 -->
+                <!-- Polaroid 4 - NARCOS THEME -->
                 <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
-                    <img src="https://placehold.co/400x400/FFDDE4/543A43?text=Just+Us" alt="Placeholder image of a selfie" class="w-full h-auto">
-                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">Just a random Tuesday</p>
+                    <img src="https://www.hollywoodreporter.com/wp-content/uploads/2016/08/narcos_publicity_4_h_2016.jpg?w=800" 
+                         alt="Pablo and Tata together at La Catedral" 
+                         class="w-full"
+                         onerror="this.src='https://placehold.co/400x400/543A43/FFF8F1?text=La+Catedral'">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">b sl oun ng kon</p>
                 </div>
+
             </div>
         </section>
 
-        <!-- 4. "Little Things I Love About You" Section -->
+        <!-- 4. "Little Things I Love About You" Section -- UPDATED FOR 500 DAYS -->
         <section id="little-things" class="fade-in-section">
             <h2 class="text-4xl font-heading text-center mb-12">All the little things...</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -479,73 +521,74 @@
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">One</div>
-                        <div class="flip-card-back font-body">The way you hum when you're cooking.</div>
+                        <div class="flip-card-back font-body">I love your crooked teeth.</div>
                     </div>
                 </div>
                 <!-- Flip Card 2 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Two</div>
-                        <div class="flip-card-back font-body">How you always steal the covers.</div>
+                        <div class="flip-card-back font-body">I love your 1960s haircut.</div>
                     </div>
                 </div>
                 <!-- Flip Card 3 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Three</div>
-                        <div class="flip-card-back font-body">Your terrible, amazing puns.</div>
+                        <div class="flip-card-back font-body">I love your knobby knees.</div>
                     </div>
                 </div>
                 <!-- Flip Card 4 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Four</div>
-                        <div class="flip-card-back font-body">How you remember tiny details.</div>
+                        <div class="flip-card-back font-body">I love that little mole on your neck.</div>
                     </div>
                 </div>
                 <!-- Flip Card 5 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Five</div>
-                        <div class="flip-card-back font-body">That one smile you only use for me.</div>
+                        <div class="flip-card-back font-body">I love your heart-shaped birthmark.</div>
                     </div>
                 </div>
                 <!-- Flip Card 6 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Six</div>
-                        <div class="flip-card-back font-body">Your passion for your hobbies.</div>
+                        <div class="flip-card-back font-body">I love the way you smack your lips before you talk.</div>
                     </div>
                 </div>
                 <!-- Flip Card 7 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Seven</div>
-                        <div class="flip-card-back font-body">How you're always up for an adventure.</div>
+                        <div class="flip-card-back font-body">I love the way you sound when you laugh.</div>
                     </div>
                 </div>
                 <!-- Flip Card 8 -->
                 <div class="flip-card h-40">
                     <div class="flip-card-inner">
                         <div class="flip-card-front font-heading text-2xl">Eight</div>
-                        <div class="flip-card-back font-body">...and how you're just as happy doing nothing at all.</div>
+                        <div class="flip-card-back font-body">...and I love how we both love The Smiths.</div>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- END UPDATED SECTION -->
 
         <!-- 5. Mini-Promises Section -->
         <section id="promises" class="fade-in-section">
             <h2 class="text-4xl font-heading text-center mb-12">A few small promises...</h2>
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="sticky-note fade-in-section">
-                    <p class="font-body text-lg">I promise to always make you coffee in the morning, even when I'm tired.</p>
+                    <p class="font-body text-lg">I promise to love you, all of you, forever. Every day.</p>
                 </div>
                 <div class="sticky-note fade-in-section" style="transition-delay: 200ms;">
-                    <p class="font-body text-lg">I promise to listen, even when we disagree.</p>
+                    <p class="font-body text-lg">I promise to read to you, always.</p>
                 </div>
                 <div class="sticky-note fade-in-section" style="transition-delay: 400ms;">
-                    <p class="font-body text-lg">I promise to never stop choosing you, every single day.</p>
+                    <p class="font-body text-lg">It wasn't over, it still isn't over.</p>
                 </div>
             </div>
         </section>
@@ -554,31 +597,35 @@
         <section id="reasons" class="fade-in-section">
             <h2 class="text-4xl font-heading text-center mb-12">...and a few more reasons.</h2>
             <div class="space-y-4 max-w-lg mx-auto">
-                <div class="reason-item" style="transition-delay: 100ms;">You make me feel safe.</div>
-                <div class="reason-item" style="transition-delay: 200ms;">You're endlessly curious.</div>
-                <div class="reason-item" style="transition-delay: 300ms;">You're my best friend.</div>
-                <div class="reason-item" style="transition-delay: 400ms;">You make me a better person.</div>
-                <div class="reason-item" style="transition-delay: 500ms;">You're my home.</div>
+                <div class="reason-item" style="transition-delay: 100ms;">You are my best friend.</div>
+                <div class="reason-item" style="transition-delay: 200ms;">You're my home.</div>
+                <div class="reason-item" style="transition-delay: 300ms;">We're the same.</div>
+                <div class="reason-item" style="transition-delay: 400ms;">You make me feel alive.</div>
+                <div class="reason-item" style="transition-delay: 500ms;">Because "If you're a bird, I'm a bird."</div>
             </div>
         </section>
 
-        <!-- 6. Interactive Surprise Moment -->
+        <!-- 6. Interactive Surprise Moment -- REVERTED TO NOTEBOOK -->
         <section id="surprise" class="fade-in-section text-center">
             <h2 class="text-4xl font-heading mb-6">One last thing...</h2>
-            <p class="text-lg mb-8">I have a little surprise for you. <br> What's the nickname I always call you?</p>
+            <p class="text-lg mb-8">What's my line? <br> If you're a...</p>
             <div class="flex justify-center space-x-2">
                 <input id="password-input" type="text" placeholder="Type it here..." class="p-3 rounded-lg border-2 bg-transparent w-64" style="border-color: var(--highlight-color); color: var(--text-color);">
                 <button id="password-button" class="p-3 rounded-lg font-heading text-lg" style="background-color: var(--highlight-color); color: var(--text-color);">Reveal</button>
             </div>
+            <!-- DEMO HINT -->
+            <p class="text-xs opacity-50 mt-4">(For demo: The password is "bird")</p>
+            
             <p id="password-error" class="text-red-500 mt-4 hidden">Not quite! Try again.</p>
             
+            <!-- REVERTED REVEAL MESSAGE -->
             <div id="surprise-message" class="hidden mt-12 p-8 rounded-lg" style="background-color: var(--paper-bg);">
-                <h3 class="text-5xl font-accent mb-6" style="color: var(--highlight-color);">You got it!</h3>
+                <h3 class="text-5xl font-accent mb-6" style="color: var(--highlight-color);">You got it.</h3>
                 <p class="text-2xl font-body leading-relaxed">
-                    The surprise is simple: this is just the beginning. My love for you grows more every day. Thank you for being the most incredible part of my life.
+                    "The best love is the kind that awakens the soul; that makes us reach for more, that plants the fire in our hearts and brings peace to our minds. That’s what I hope to give you forever."
                 </p>
                 <p class="text-xl font-body mt-6">
-                    (Also... I already booked our reservation at that restaurant you love for Friday night. ❤️)
+                    (And I finished the house for you. Come and see it. ❤️)
                 </p>
             </div>
         </section>
@@ -587,10 +634,10 @@
     <!-- 7. Closing Section -->
     <footer id="closing" class="h-screen flex flex-col items-center justify-center text-center p-6 relative">
         <div class="fade-in-section">
-            <p class="text-4xl md:text-6xl font-heading leading-tight">Thank you for being my person.</p>
-            <p class="text-5xl md:text-8xl font-accent my-12" style="color: var(--highlight-color);">I love you — always.</p>
+            <p class="text-4xl md:text-6xl font-heading leading-tight">Thank you for coming back to me.</p>
+            <p class="text-5xl md:text-8xl font-accent my-12" style="color: var(--highlight-color);">I love you. Always.</p>
             <p class="text-2xl font-body">All my love,</p>
-            <p class="text-4xl font-accent mt-4">[Your Name Here]</p>
+            <p class="text-4xl font-accent mt-4">Noah</p>
         </div>
         
         <!-- Easter Egg Trigger -- ADDED BACK -->
@@ -606,8 +653,8 @@
             <p class="font-body text-lg mt-4">
                 You always were the curious one. I guess this is my bonus note to say...
                 <br><br>
-                **You're my entire world.**
-            </p>
+                **They say in life, you only get one great love. You are mine.**
+            </D>
             <button id="close-modal-button" class="mt-8 p-3 px-6 rounded-lg font-heading text-lg" style="background-color: var(--highlight-color); color: var(--text-color);">
                 Close
             </button>
@@ -622,30 +669,8 @@
             // --- 1. Theme Toggler --- REMOVED
             // Page is forced dark via <html> tag
 
-            // --- 2. Music Player (Tone.js) ---
-            // const musicToggle = document.getElementById('music-toggle'); // REMOVED
-            // const playIcon = document.getElementById('music-icon-play'); // REMOVED
-            // const pauseIcon = document.getElementById('music-icon-pause'); // REMOVED
-            let isPlaying = false;
-
-            // Create a simple, soft piano-like melody
-            const synth = new Tone.PolySynth(Tone.Synth, {
-                oscillator: { type: "fatsawtooth" },
-                envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 1 },
-                volume: -12 // Quieter
-            }).toDestination();
-            
-            const filter = new Tone.AutoFilter("4n").toDestination().start();
-            synth.connect(filter);
-
-            const melody = new Tone.Sequence((time, note) => {
-                synth.triggerAttackRelease(note, "4n", time);
-            }, ["C4", ["E4", "G4"], "G4", ["D4", "F#4"], "A4", ["C5", "E5"], "F4", ["A4", "C5"]], "2n");
-            
-            Tone.Transport.bpm.value = 70;
-
-            // musicToggle.addEventListener('click', ...); // REMOVED
-            // Music will now play on envelope click
+            // --- 2. Music Player (Tone.js) --- REMOVED
+            // All Tone.js code has been removed.
 
             // --- 3. Scroll-fade Animations ---
             const sections = document.querySelectorAll('.fade-in-section');
@@ -670,30 +695,34 @@
             const envelopeSection = document.getElementById('envelope-section');
             const envelopeHelper = document.getElementById('envelope-helper');
             const letterSection = document.getElementById('letter');
+            
+            // NEW: Get the audio element
+            const letterMusic = document.getElementById('letter-music');
+
+            // --- NEW: TRY TO PLAY ON LOAD ---
+            if (letterMusic) {
+                // This attempts to play on load. 
+                // NOTE: Most browsers will block this until the user clicks.
+                // We add .catch() to prevent a console error if it's blocked.
+                letterMusic.play().catch(e => console.log("Autoplay was blocked. Waiting for user click."));
+            }
+            // --- END NEW ---
 
             // Show helper text after a delay
             setTimeout(() => {
                 envelopeHelper.style.opacity = '1';
             }, 1500);
 
-            // Make the listener async to handle await Tone.start()
-            envelope.addEventListener('click', async () => { 
+            // Removed async and music logic
+            envelope.addEventListener('click', () => { 
                 
-                // --- NEW: Start music on envelope open ---
-                try {
-                    if (Tone.context.state !== 'running') {
-                        await Tone.start();
-                    }
-                    if (!isPlaying) {
-                        Tone.Transport.start();
-                        melody.start(0);
-                        isPlaying = true;
-                    }
-                } catch (e) {
-                    console.error("Audio playback failed to start:", e);
+                // NEW: Play the local audio file
+                if (letterMusic) {
+                    // We also play it here. If autoplay failed, this click 
+                    // will successfully start the music.
+                    letterMusic.play().catch(e => console.error("Audio playback failed:", e));
                 }
-                // --- End of music logic ---
-
+                
                 envelope.classList.add('open');
                 envelopeHelper.style.opacity = '0';
                 
@@ -712,8 +741,8 @@
             const passwordError = document.getElementById('password-error');
             const surpriseMessage = document.getElementById('surprise-message');
             
-            // !! IMPORTANT: Change 'mylove' to the real nickname !!
-            const unlockPassword = 'mylove'; 
+            // !! IMPORTANT: REVERTED to 'bird' !!
+            const unlockPassword = 'bird'; 
 
             passwordButton.addEventListener('click', () => {
                 if (passwordInput.value.trim().toLowerCase() === unlockPassword) {
@@ -741,23 +770,26 @@
             const trigger = document.getElementById('easter-egg-trigger');
             const closeButton = document.getElementById('close-modal-button');
 
-            // --- THIS IS THE FIX ---
-            // Removed the extra '.' from '(). =>'
-            trigger.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-            });
-            // --- End Fix ---
+            if (trigger) { // Add a check in case it's ever removed again
+                trigger.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                });
+            }
 
-            closeButton.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-            // Also close by clicking background
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
                     modal.classList.add('hidden');
-                }
-            });
-
+                });
+            }
+            // Also close by clicking background
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            }
+            
             // --- 7. NEW: Cursor Heart Trail ---
             document.addEventListener('mousemove', (e) => {
                 const heart = document.createElement('div');
