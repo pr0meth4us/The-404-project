@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark"> <!-- Set to dark mode by default -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Made This For You</title>
+
+    <!-- 1. Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 2. Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sacramento&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <!-- 3. JavaScript Libraries -->
+    <!-- Tone.js for music -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <!-- canvas-confetti for surprise -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- 4. Tailwind Config & Custom Styles -->
+    <style type="text/tailwindcss">
+        @layer base {
+            /* Set base theme colors */
+            html {
+                --bg-color: theme(colors.cream);
+                --text-color: theme(colors.deep-plum);
+                --accent-color: theme(colors.blush-pink);
+                --highlight-color: theme(colors.rose-taupe);
+                --paper-bg: theme(colors.white);
+                --sticky-bg: theme(colors.blush-pink / 0.4);
+            }
+            /* Set dark mode theme colors */
+            html.dark {
+                --bg-color: theme(colors.deep-plum);
+                --text-color: theme(colors.cream);
+                --accent-color: theme(colors.rose-taupe);
+                --highlight-color: theme(colors.blush-pink);
+                --paper-bg: theme(colors.deep-plum / 0.5); /* A slightly lighter plum */
+                --sticky-bg: theme(colors.rose-taupe / 0.3);
+            }
+            body {
+                @apply font-body transition-colors duration-500 ease-in-out;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+            }
+            h1, h2, h3 {
+                @apply font-heading;
+            }
+        }
+        /* Custom component styles */
+        .font-heading { font-family: 'Playfair Display', serif; }
+        .font-body { font-family: 'Lora', serif; }
+        .font-accent { font-family: 'Sacramento', cursive; }
+
+        /* Scroll-fade animations */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- FLOATING HEARTS (ADDED BACK) --- */
+        #particles-container {
+            @apply fixed inset-0 overflow-hidden z-[-10];
+        }
+        .particle {
+            @apply absolute;
+            color: var(--accent-color);
+            /* --- THIS IS THE FIX --- */
+            /* Start the particle at the bottom and invisible */
+            transform: translateY(100vh);
+            opacity: 0;
+            /* --- End Fix --- */
+            animation: float 25s infinite linear;
+        }
+        .particle::before {
+            content: '♥';
+        }
+        .particle:nth-child(1) { font-size: 10px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { font-size: 20px; left: 20%; animation-delay: 3s; animation-duration: 20s; }
+        .particle:nth-child(3) { font-size: 12px; left: 30%; animation-delay: 6s; }
+        .particle:nth-child(4) { font-size: 15px; left: 40%; animation-delay: 9s; animation-duration: 18s; }
+        .particle:nth-child(5) { font-size: 8px; left: 50%; animation-delay: 12s; }
+        .particle:nth-child(6) { font-size: 18px; left: 60%; animation-delay: 15s; animation-duration: 22s; }
+        .particle:nth-child(7) { font-size: 10px; left: 70%; animation-delay: 18s; }
+        .particle:nth-child(8) { font-size: 14px; left: 80%; animation-delay: 21s; animation-duration: 19s; }
+        .particle:nth-child(9) { font-size: 16px; left: 90%; animation-delay: 24s; }
+        .particle:nth-child(10) { font-size: 10px; left: 15%; animation-delay: 27s; }
+
+        @keyframes float {
+            0% { 
+                /* Animation starts from the state set in .particle */
+                transform: translateY(100vh) scale(0); 
+                opacity: 0; 
+            }
+            50% { 
+                opacity: 0.7; 
+            }
+            100% { 
+                transform: translateY(-10vh) scale(1); 
+                opacity: 0; 
+            }
+        }
+        /* --- END OF FLOATING HEARTS --- */
+
+
+        /* iMessage Bubbles */
+        .chat-bubble {
+            @apply p-3 rounded-2xl max-w-[70%] shadow-md;
+        }
+        .chat-bubble-left {
+            @apply chat-bubble rounded-bl-lg;
+            background-color: var(--accent-color);
+            color: var(--text-color); /* Contrast for light/dark */
+        }
+        .chat-bubble-right {
+            @apply chat-bubble rounded-br-lg ml-auto;
+            background-color: var(--highlight-color);
+            color: var(--text-color); /* Contrast for light/dark */
+        }
+        html.dark .chat-bubble-right {
+            color: theme(colors.deep-plum);
+        }
+        html.light .chat-bubble-left {
+            color: theme(colors.deep-plum);
+        }
+
+
+        /* Polaroid Gallery */
+        .polaroid {
+            @apply p-4 pb-10 bg-white dark:bg-gray-100 rounded-sm shadow-lg transition-transform duration-300 ease-in-out relative;
+        }
+        .polaroid:nth-child(odd) { transform: rotate(-3deg); }
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 10;
+        }
+        .polaroid img {
+            @apply border border-gray-200;
+        }
+
+        /* "Little Things" Flip Cards */
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            @apply relative w-full h-full transition-transform duration-700;
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            @apply absolute w-full h-full p-4 rounded-lg shadow-lg flex items-center justify-center text-center;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        .flip-card-front {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+        .flip-card-back {
+            background-color: var(--highlight-color);
+            color: var(--text-color);
+            transform: rotateY(180deg);
+        }
+        html.dark .flip-card-back, html.dark .flip-card-front {
+            color: theme(colors.deep-plum);
+        }
+
+
+        /* Sticky Note Promises */
+        .sticky-note {
+            @apply p-6 rounded-lg shadow-xl;
+            background-color: var(--sticky-bg);
+            transition: transform 0.3s ease;
+        }
+        .sticky-note:hover {
+            @apply scale-105;
+        }
+        .sticky-note:nth-child(odd) { transform: rotate(-2deg); }
+        .sticky-note:nth-child(even) { transform: rotate(2deg); }
+
+        /* Sealed Envelope */
+        #envelope {
+            @apply relative w-80 h-60 rounded-lg shadow-2xl cursor-pointer transition-all duration-500 ease-in-out;
+            background-color: var(--highlight-color);
+            transform-style: preserve-3d;
+        }
+        #envelope:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+        }
+        #envelope::before, #envelope::after {
+            content: '';
+            @apply absolute;
+        }
+        /* Flap */
+        #envelope::before {
+            @apply w-0 h-0 border-transparent z-20;
+            border-width: 10rem 10rem 0 10rem; /* 160px 160px 0 160px */
+            border-top-color: var(--accent-color);
+            top: 0;
+            left: 0;
+            transform-origin: top;
+            transition: transform 0.5s ease-in-out;
+        }
+        /* Back */
+        #envelope::after {
+            @apply w-full h-full rounded-lg;
+            background-color: var(--highlight-color);
+            top: 0;
+            left: 0;
+        }
+        #envelope.open::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+            transition-delay: 0s;
+        }
+        .envelope-text {
+            @apply absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-heading text-xl;
+            color: var(--text-color);
+            transition: opacity 0.3s ease-in-out;
+        }
+        #envelope.open .envelope-text {
+            opacity: 0;
+        }
+
+        /* Timeline */
+        .timeline-item {
+            @apply relative pl-8 pb-8;
+            border-left: 2px solid var(--highlight-color);
+        }
+        .timeline-item:last-child {
+            @apply pb-0;
+        }
+        .timeline-dot {
+            @apply absolute w-4 h-4 rounded-full -left-2 top-1;
+            background-color: var(--accent-color);
+            border: 2px solid var(--bg-color);
+        }
+        .timeline-date {
+            @apply text-sm font-semibold opacity-70 mb-1;
+            color: var(--highlight-color);
+        }
+        .timeline-title {
+            @apply font-heading text-xl mb-2;
+        }
+
+        /* Cursor Heart Trail */
+        .trail-heart {
+            @apply absolute z-[200] pointer-events-none;
+            color: var(--accent-color);
+            opacity: 0;
+            transform: scale(0.5);
+            animation: trail-fade 0.5s ease-out forwards;
+        }
+        .trail-heart::before {
+            content: '♥';
+            font-size: 20px;
+        }
+        @keyframes trail-fade {
+            0% { opacity: 1; transform: scale(0.5); }
+            100% { opacity: 0; transform: scale(1.5) translateY(-20px); }
+        }
+
+        /* Animated List (Reasons) */
+        .reason-item {
+            @apply p-4 rounded-lg font-heading text-2xl transition-all duration-300 ease-in-out;
+            background-color: var(--paper-bg);
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out, background-color 0.3s;
+        }
+        .reason-item:nth-child(odd) {
+            transform: translateX(20px);
+        }
+        .fade-in-section.is-visible .reason-item {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reason-item:hover {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+        html.dark .reason-item:hover {
+            color: theme(colors.deep-plum);
+        }
+    </style>
+
+    <!-- 5. Tailwind Config Script -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable class-based dark mode
+            theme: {
+                extend: {
+                    colors: {
+                        'blush-pink': '#FFDDE4',
+                        'cream': '#FFF8F1',
+                        'rose-taupe': '#D4C3B5',
+                        'deep-plum': '#543A43',
+                    },
+                    fontFamily: {
+                        heading: ['Playfair Display', 'serif'],
+                        body: ['Lora', 'serif'],
+                        accent: ['Sacramento', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-cream text-deep-plum dark:bg-deep-plum dark:text-cream min-h-screen">
+
+    <!-- Particle Container (MOVED) -- ADDED BACK -->
+    <div id="particles-container">
+        <!-- Particles will be injected here by CSS -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- UI Toggles (Fixed) -- REMOVED -->
+    <!-- This entire block has been removed -->
+
+    <!-- 1. Hero Section -->
+    <section id="hero" class="h-screen flex items-center justify-center text-center relative overflow-hidden">
+        <!-- particles-container was MOVED from here -->
+        <div class="z-10 animate-fade-in opacity-0" style="animation: fade-in 1.5s ease-out 0.5s forwards;">
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-heading">Hi, love.</h1>
+            <p class="text-2xl md:text-3xl font-accent mt-4">I made this for you.</p>
+        </div>
+        <style>
+            @keyframes fade-in {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </section>
+
+    <!-- Main Content Wrapper -->
+    <div class="max-w-4xl mx-auto px-6 py-24 space-y-32">
+
+        <!-- 2. NEW: Sealed Envelope Section -->
+        <section id="envelope-section" class="fade-in-section flex flex-col items-center justify-center min-h-[400px]">
+            <h2 class="text-4xl font-heading text-center mb-12">I wrote you a letter...</h2>
+            <div id="envelope">
+                <div class="envelope-text">Click to open</div>
+            </div>
+            <p id="envelope-helper" class="mt-8 font-accent text-2xl opacity-0 transition-opacity duration-500 delay-1000">Go on, open it!</p>
+        </section>
+
+
+        <!-- 2. Love Letter Body (Now Hidden) -->
+        <section id="letter" class="fade-in-section p-8 md:p-12 rounded-lg shadow-xl hidden" style="background-color: var(--paper-bg);">
+            <h2 class="font-accent text-5xl mb-8" style="color: var(--highlight-color);">My Dearest,</h2>
+            <div class="space-y-6 text-lg md:text-xl font-body leading-relaxed">
+                <p class="fade-in-section">
+                    I'm not sure where to even begin. Trying to put what I feel for you into words feels like trying to capture the entire sky in a single jar. It's endless, beautiful, and more than I ever knew I could hold.
+                </p>
+                <p class="fade-in-section">
+                    What I love about you? I love the way your eyes crinkle when you laugh. I love the kindness you show to strangers, even when you think no one is watching. I love the way you listen, *really* listen, and make me feel like I'm the only person in the world. I love your ambition, your silliness, and the way you can make even a boring Tuesday feel like an adventure.
+                </p>
+                <p class="fade-in-section">
+                    I still think about that one evening... you know the one. The air was cold, but I've never felt warmer. We talked for hours, and it felt like minutes. That was the night I knew. I knew you were my person.
+                </p>
+                <p class="fade-in-section">
+                    My hope for us is simple: more. More laughter, more adventures, more quiet mornings, and more overcoming challenges together. My promise is that I will always be your biggest fan, your safest harbor, and your partner in everything.
+                </p>
+            </div>
+        </section>
+
+        <!-- iMessage-style chat bubbles -->
+        <section id="imessage" class="fade-in-section">
+            <h2 class="text-4xl font-heading text-center mb-12">Remember this?</h2>
+            <div class="max-w-md mx-auto space-y-4">
+                <div class="chat-bubble-left fade-in-section">
+                    Hey, are you still up for grabbing food?
+                </div>
+                <div class="chat-bubble-right fade-in-section" style="transition-delay: 200ms;">
+                    Absolutely! I'm starving.
+                </div>
+                <div class="chat-bubble-right fade-in-section" style="transition-delay: 400ms;">
+                    ...but I could also just order pizza and we could watch that weird documentary?
+                </div>
+                <div class="chat-bubble-left fade-in-section" style="transition-delay: 600ms;">
+                    That is 100% the best idea you've had all day.
+                </div>
+                <div class="chat-bubble-left fade-in-section" style="transition-delay: 800ms;">
+                    Ordering now. ❤️
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Timeline Section -->
+        <section id="timeline" class="fade-in-section">
+            <h2 class="text-4xl font-heading text-center mb-12">Our Story So Far...</h2>
+            <div class="relative">
+                <!-- Timeline Item 1 -->
+                <div class="timeline-item fade-in-section">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">August 2021</div>
+                    <div class="timeline-title">The Day We Met</div>
+                    <p class="font-body">I still remember seeing you across the room. It sounds like a cliché, but it felt like everything else faded away.</p>
+                </div>
+                <!-- Timeline Item 2 -->
+                <div class="timeline-item fade-in-section" style="transition-delay: 200ms;">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">October 2021</div>
+                    <div class="timeline-title">Our First "Real" Date</div>
+                    <p class="font-body">We were both so nervous. We talked for five hours straight and it felt like five minutes. (And yes, I spilled pasta on my shirt.)</p>
+                </div>
+                <!-- Timeline Item 3 -->
+                <div class="timeline-item fade-in-section" style="transition-delay: 400ms;">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">June 2022</div>
+                    <div class="timeline-title">The Beach Trip</div>
+                    <p class="font-body">That weekend away, watching the sunset and just being quiet together. That's when I knew this was forever.</p>
+                </div>
+                <!-- Timeline Item 4 -->
+                <div class="timeline-item fade-in-section" style="transition-delay: 600ms;">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Today</div>
+                    <div class="timeline-title">...and It Only Gets Better</div>
+                    <p class="font-body">Every single day with you is my new favorite memory.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3. Photo Strip / Gallery -->
+        <section id="gallery" class="fade-in-section">
+            <h2 class="text-4xl font-heading text-center mb-12">A few of my favorite moments...</h2>
+            <!-- Horizontal scrolling container -->
+            <div class="flex overflow-x-auto space-x-8 pb-8 snap-x snap-mandatory">
+                <!-- Polaroid 1 -->
+                <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
+                    <img src="https://placehold.co/400x400/FFDDE4/543A43?text=Our+First+Trip" alt="Placeholder image of a trip" class="w-full h-auto">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">The Beach, 2023</p>
+                </div>
+                <!-- Polaroid 2 -->
+                <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
+                    <img src="https://placehold.co/400x400/D4C3B5/543A43?text=That+Silly+Hat" alt="Placeholder image of a silly hat" class="w-full h-auto">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">The Farmer's Market</p>
+                </div>
+                <!-- Polaroid 3 -->
+                <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
+                    <img src="https://placehold.co/400x400/FFF8F1/543A43?text=New+Year's" alt="Placeholder image of New Year's" class="w-full h-auto">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">Midnight</p>
+                </div>
+                <!-- Polaroid 4 -->
+                <div class="polaroid snap-center flex-shrink-0 w-64 md:w-72">
+                    <img src="https://placehold.co/400x400/FFDDE4/543A43?text=Just+Us" alt="Placeholder image of a selfie" class="w-full h-auto">
+                    <p class="font-accent text-2xl text-center mt-4 text-deep-plum">Just a random Tuesday</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. "Little Things I Love About You" Section -->
+        <section id="little-things" class="fade-in-section">
+            <h2 class="text-4xl font-heading text-center mb-12">All the little things...</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Flip Card 1 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">One</div>
+                        <div class="flip-card-back font-body">The way you hum when you're cooking.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 2 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Two</div>
+                        <div class="flip-card-back font-body">How you always steal the covers.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 3 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Three</div>
+                        <div class="flip-card-back font-body">Your terrible, amazing puns.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 4 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Four</div>
+                        <div class="flip-card-back font-body">How you remember tiny details.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 5 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Five</div>
+                        <div class="flip-card-back font-body">That one smile you only use for me.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 6 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Six</div>
+                        <div class="flip-card-back font-body">Your passion for your hobbies.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 7 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Seven</div>
+                        <div class="flip-card-back font-body">How you're always up for an adventure.</div>
+                    </div>
+                </div>
+                <!-- Flip Card 8 -->
+                <div class="flip-card h-40">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front font-heading text-2xl">Eight</div>
+                        <div class="flip-card-back font-body">...and how you're just as happy doing nothing at all.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Mini-Promises Section -->
+        <section id="promises" class="fade-in-section">
+            <h2 class="text-4xl font-heading text-center mb-12">A few small promises...</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="sticky-note fade-in-section">
+                    <p class="font-body text-lg">I promise to always make you coffee in the morning, even when I'm tired.</p>
+                </div>
+                <div class="sticky-note fade-in-section" style="transition-delay: 200ms;">
+                    <p class="font-body text-lg">I promise to listen, even when we disagree.</p>
+                </div>
+                <div class="sticky-note fade-in-section" style="transition-delay: 400ms;">
+                    <p class="font-body text-lg">I promise to never stop choosing you, every single day.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: More Reasons Section -->
+        <section id="reasons" class="fade-in-section">
+            <h2 class="text-4xl font-heading text-center mb-12">...and a few more reasons.</h2>
+            <div class="space-y-4 max-w-lg mx-auto">
+                <div class="reason-item" style="transition-delay: 100ms;">You make me feel safe.</div>
+                <div class="reason-item" style="transition-delay: 200ms;">You're endlessly curious.</div>
+                <div class="reason-item" style="transition-delay: 300ms;">You're my best friend.</div>
+                <div class="reason-item" style="transition-delay: 400ms;">You make me a better person.</div>
+                <div class="reason-item" style="transition-delay: 500ms;">You're my home.</div>
+            </div>
+        </section>
+
+        <!-- 6. Interactive Surprise Moment -->
+        <section id="surprise" class="fade-in-section text-center">
+            <h2 class="text-4xl font-heading mb-6">One last thing...</h2>
+            <p class="text-lg mb-8">I have a little surprise for you. <br> What's the nickname I always call you?</p>
+            <div class="flex justify-center space-x-2">
+                <input id="password-input" type="text" placeholder="Type it here..." class="p-3 rounded-lg border-2 bg-transparent w-64" style="border-color: var(--highlight-color); color: var(--text-color);">
+                <button id="password-button" class="p-3 rounded-lg font-heading text-lg" style="background-color: var(--highlight-color); color: var(--text-color);">Reveal</button>
+            </div>
+            <p id="password-error" class="text-red-500 mt-4 hidden">Not quite! Try again.</p>
+            
+            <div id="surprise-message" class="hidden mt-12 p-8 rounded-lg" style="background-color: var(--paper-bg);">
+                <h3 class="text-5xl font-accent mb-6" style="color: var(--highlight-color);">You got it!</h3>
+                <p class="text-2xl font-body leading-relaxed">
+                    The surprise is simple: this is just the beginning. My love for you grows more every day. Thank you for being the most incredible part of my life.
+                </p>
+                <p class="text-xl font-body mt-6">
+                    (Also... I already booked our reservation at that restaurant you love for Friday night. ❤️)
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 7. Closing Section -->
+    <footer id="closing" class="h-screen flex flex-col items-center justify-center text-center p-6 relative">
+        <div class="fade-in-section">
+            <p class="text-4xl md:text-6xl font-heading leading-tight">Thank you for being my person.</p>
+            <p class="text-5xl md:text-8xl font-accent my-12" style="color: var(--highlight-color);">I love you — always.</p>
+            <p class="text-2xl font-body">All my love,</p>
+            <p class="text-4xl font-accent mt-4">[Your Name Here]</p>
+        </div>
+        
+        <!-- Easter Egg Trigger -- ADDED BACK -->
+        <button id="easter-egg-trigger" class="absolute bottom-10 right-10 text-xs opacity-20 hover:opacity-100 transition-opacity" style="color: var(--highlight-color);">
+            ♡
+        </button>
+    </footer>
+
+    <!-- Easter Egg Modal -- ADDED BACK -->
+    <div id="easter-egg-modal" class="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-6 hidden backdrop-blur-sm">
+        <div class="p-8 rounded-lg shadow-2xl max-w-md text-center" style="background-color: var(--paper-bg);">
+            <h2 class="text-4xl font-accent" style="color: var(--highlight-color);">You found it!</h2>
+            <p class="font-body text-lg mt-4">
+                You always were the curious one. I guess this is my bonus note to say...
+                <br><br>
+                **You're my entire world.**
+            </p>
+            <button id="close-modal-button" class="mt-8 p-3 px-6 rounded-lg font-heading text-lg" style="background-color: var(--highlight-color); color: var(--text-color);">
+                Close
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Main JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. Theme Toggler --- REMOVED
+            // Page is forced dark via <html> tag
+
+            // --- 2. Music Player (Tone.js) ---
+            // const musicToggle = document.getElementById('music-toggle'); // REMOVED
+            // const playIcon = document.getElementById('music-icon-play'); // REMOVED
+            // const pauseIcon = document.getElementById('music-icon-pause'); // REMOVED
+            let isPlaying = false;
+
+            // Create a simple, soft piano-like melody
+            const synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "fatsawtooth" },
+                envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 1 },
+                volume: -12 // Quieter
+            }).toDestination();
+            
+            const filter = new Tone.AutoFilter("4n").toDestination().start();
+            synth.connect(filter);
+
+            const melody = new Tone.Sequence((time, note) => {
+                synth.triggerAttackRelease(note, "4n", time);
+            }, ["C4", ["E4", "G4"], "G4", ["D4", "F#4"], "A4", ["C5", "E5"], "F4", ["A4", "C5"]], "2n");
+            
+            Tone.Transport.bpm.value = 70;
+
+            // musicToggle.addEventListener('click', ...); // REMOVED
+            // Music will now play on envelope click
+
+            // --- 3. Scroll-fade Animations ---
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Optional: unobserve after it's visible
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- 4. NEW: Envelope Opener ---
+            const envelope = document.getElementById('envelope');
+            const envelopeSection = document.getElementById('envelope-section');
+            const envelopeHelper = document.getElementById('envelope-helper');
+            const letterSection = document.getElementById('letter');
+
+            // Show helper text after a delay
+            setTimeout(() => {
+                envelopeHelper.style.opacity = '1';
+            }, 1500);
+
+            // Make the listener async to handle await Tone.start()
+            envelope.addEventListener('click', async () => { 
+                
+                // --- NEW: Start music on envelope open ---
+                try {
+                    if (Tone.context.state !== 'running') {
+                        await Tone.start();
+                    }
+                    if (!isPlaying) {
+                        Tone.Transport.start();
+                        melody.start(0);
+                        isPlaying = true;
+                    }
+                } catch (e) {
+                    console.error("Audio playback failed to start:", e);
+                }
+                // --- End of music logic ---
+
+                envelope.classList.add('open');
+                envelopeHelper.style.opacity = '0';
+                
+                // Wait for envelope animation to finish
+                setTimeout(() => {
+                    envelopeSection.classList.add('hidden'); // Hide envelope section
+                    letterSection.classList.remove('hidden'); // Show letter
+                    letterSection.classList.add('is-visible'); // Force trigger fade-in
+                }, 700); // 700ms matches animation
+            });
+
+
+            // --- 5. Surprise Password ---
+            const passwordInput = document.getElementById('password-input');
+            const passwordButton = document.getElementById('password-button');
+            const passwordError = document.getElementById('password-error');
+            const surpriseMessage = document.getElementById('surprise-message');
+            
+            // !! IMPORTANT: Change 'mylove' to the real nickname !!
+            const unlockPassword = 'mylove'; 
+
+            passwordButton.addEventListener('click', () => {
+                if (passwordInput.value.trim().toLowerCase() === unlockPassword) {
+                    // Success!
+                    surpriseMessage.classList.remove('hidden');
+                    passwordError.classList.add('hidden');
+                    passwordInput.classList.add('hidden');
+                    passwordButton.classList.add('hidden');
+                    
+                    // Trigger confetti
+                    confetti({
+                        particleCount: 150,
+                        spread: 90,
+                        origin: { y: 0.6 },
+                        colors: ['#FFDDE4', '#D4C3B5', '#FFF8F1']
+                    });
+                } else {
+                    // Fail
+                    passwordError.classList.remove('hidden');
+                }
+            });
+
+            // --- 6. Easter Egg Modal --- ADDED BACK
+            const modal = document.getElementById('easter-egg-modal');
+            const trigger = document.getElementById('easter-egg-trigger');
+            const closeButton = document.getElementById('close-modal-button');
+
+            // --- THIS IS THE FIX ---
+            // Removed the extra '.' from '(). =>'
+            trigger.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+            });
+            // --- End Fix ---
+
+            closeButton.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+            // Also close by clicking background
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+
+            // --- 7. NEW: Cursor Heart Trail ---
+            document.addEventListener('mousemove', (e) => {
+                const heart = document.createElement('div');
+                heart.classList.add('trail-heart');
+                document.body.appendChild(heart);
+
+                // --- FIX: Added scrollX and scrollY ---
+                // This ensures hearts appear at the cursor position even when scrolled down
+                heart.style.left = `${e.clientX + window.scrollX}px`;
+                heart.style.top = `${e.clientY + window.scrollY}px`;
+                // --- End Fix ---
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 500); // Match animation duration
+            });
+
+        });
+    </script>
+</body>
+</html>
